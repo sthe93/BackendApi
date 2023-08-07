@@ -24,8 +24,11 @@ jobs:
         echo 'export PATH="/usr/local/heroku/bin:$PATH"' >> $GITHUB_ENV
       shell: bash
 
-    - name: Log in to Heroku Container Registry
-      run: heroku container:login --username=_ --password=${HEROKU_API_KEY}
+    - name: Log in to Heroku
+      run: |
+        echo "machine api.heroku.com login _ password=${HEROKU_API_KEY}" > ~/.netrc
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
     - name: Build and push Docker image
       run: |
