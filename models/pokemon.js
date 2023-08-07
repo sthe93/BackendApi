@@ -1,4 +1,4 @@
-// models/pokemon.js
+
 class Pokemon {
     constructor(id, name, image, height, weight) {
       this.id = id;

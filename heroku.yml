@@ -1,0 +1,4 @@
+# backend/heroku.yml
+build:
+  docker:
+    web: Dockerfile  # Path to your backend Dockerfile
