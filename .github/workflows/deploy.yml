@@ -24,14 +24,10 @@ jobs:
         echo 'export PATH="/usr/local/heroku/bin:$PATH"' >> $GITHUB_ENV
       shell: bash
 
-    - name: Log in to Heroku Container Registry
-      run: heroku container:login -i
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-
     - name: Build and push Docker image
       run: |
         docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
+        docker login --username=_ --password="${HEROKU_API_KEY}" registry.heroku.com
         docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
 
     - name: Set Heroku Email, APP Name, and API Key
