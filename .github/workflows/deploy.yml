@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: windows-latest  # Use Windows runner
+    runs-on: ubuntu-latest  # Use Ubuntu runner
 
     steps:
     - name: Checkout code
@@ -20,9 +20,9 @@ jobs:
 
     - name: Install Heroku CLI
       run: |
-        Invoke-WebRequest -Uri https://cli-assets.heroku.com/heroku-x64.exe -OutFile $env:TEMP\heroku.exe
-        $env:Path += ";$env:TEMP"
-      shell: pwsh
+        curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+        echo 'export PATH="/usr/local/heroku/bin:$PATH"' >> $GITHUB_ENV
+      shell: bash
 
     - name: Log in to Heroku Container Registry
       run: heroku container:login
