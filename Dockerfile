@@ -16,5 +16,5 @@ COPY . .
 # Expose the port that your Node.js app listens on
 EXPOSE 3000
 
-# Start the Node.js app
+# Start the index.js app
 CMD ["node", "index.js"]
