@@ -11,6 +11,7 @@ const swaggerDocument = YAML.load('./openapi.yaml');
 app.use(express.json());
 app.use(cors());
 
+// Endpoint to get a list of all pokemons
 app.get('/api/pokemons', async (req, res) => {
   try {
     const pokemons = await pokemonService.getAllPokemons();
@@ -20,6 +21,7 @@ app.get('/api/pokemons', async (req, res) => {
   }
 });
 
+// Endpoint to get details of a specific pokemon by ID
 app.get('/api/pokemon/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -30,8 +32,10 @@ app.get('/api/pokemon/:id', async (req, res) => {
   }
 });
 
+// Serve Swagger documentation
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

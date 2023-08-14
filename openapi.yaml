@@ -3,6 +3,8 @@ info:
   version: 1.0.0
   title: Pokemon API
   description: API for fetching Pokemon data
+
+# Define the paths (endpoints) for the API
 paths:
   /api/pokemons:
     get:
@@ -17,6 +19,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Pokemon'
+  
   /api/pokemon/{id}:
     get:
       summary: Get a Pokemon by ID
@@ -38,6 +41,8 @@ paths:
                 $ref: '#/components/schemas/Pokemon'
         '404':
           description: Pokemon not found.
+
+# Define reusable components (schemas) for the API
 components:
   schemas:
     Pokemon:

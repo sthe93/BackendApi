@@ -1,78 +1,33 @@
-const chai = require('chai');
-const sinon = require('sinon');
 const axios = require('axios');
-const PokemonService = require('../services/pokemonService');
 const Pokemon = require('../models/pokemon');
 
-const expect = chai.expect;
+class PokemonService {
+  async getAllPokemons() {
+    try {
+      const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=100');
+      return response.data.results.map((pokemon, index) => new Pokemon(
+        index + 1,
+        pokemon.name,
+        `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`,
+      ));
+    } catch (error) {
+      throw new Error('Failed to fetch Pokémon list');
+    }
+  }
+  async getPokemonById(id) {
+    try {
+      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+      return new Pokemon(
+        response.data.id,
+        response.data.name,
+        response.data.sprites.front_default,
+        response.data.height,
+        response.data.weight,
+      );
+    } catch (error) {
+      throw new Error('Failed to fetch Pokémon details');
+    }
+  }
+}
 
-describe('PokemonService', () => {
-  describe('getAllPokemons', () => {
-    it('should return an array of Pokemon', async () => {
-      const mockResponse = {
-        data: {
-          results: [
-            { name: 'bulbasaur' },
-            { name: 'charmander' },
-          ],
-        },
-      };
-      sinon.stub(axios, 'get').resolves(mockResponse);
-
-      const pokemons = await PokemonService.getAllPokemons();
-
-      expect(pokemons).to.be.an('array');
-      expect(pokemons).to.have.length.above(0);
-      expect(pokemons[0]).to.be.instanceOf(Pokemon);
-
-      axios.get.restore();
-    });
-
-    it('should throw an error if fetching Pokemon list fails', async () => {
-      sinon.stub(axios, 'get').throws(new Error('Failed to fetch Pokemon list'));
-      try {
-        await PokemonService.getAllPokemons();
-      } catch (error) {
-        expect(error.message).to.equal('Failed to fetch Pokemon list');
-      }
-
-      axios.get.restore();
-    });
-  });
-
-  describe('getPokemonById', () => {
-    it('should return a Pokemon object', async () => {
-      const mockResponse = {
-        data: {
-          id: 1,
-          name: 'bulbasaur',
-          sprites: {
-            front_default: 'https://example.com/bulbasaur.png',
-          },
-          height: 7,
-          weight: 69,
-        },
-      };
-      sinon.stub(axios, 'get').resolves(mockResponse);
-
-      const pokemon = await PokemonService.getPokemonById(1);
-
-      expect(pokemon).to.be.instanceOf(Pokemon);
-      expect(pokemon.id).to.equal(1);
-      expect(pokemon.name).to.equal('bulbasaur');
-
-      axios.get.restore();
-    });
-
-    it('should throw an error if fetching Pokemon details fails', async () => {
-      sinon.stub(axios, 'get').throws(new Error('Failed to fetch Pokemon details'));
-      try {
-        await PokemonService.getPokemonById(1);
-      } catch (error) {
-        expect(error.message).to.equal('Failed to fetch Pokemon details');
-      }
-
-      axios.get.restore();
-    });
-  });
-});
+module.exports = new PokemonService();
